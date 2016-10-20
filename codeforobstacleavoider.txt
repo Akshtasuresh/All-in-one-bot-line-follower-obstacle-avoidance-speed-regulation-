@@ -1,3 +1,4 @@
+/* Checked in by Giri */
 #include<avr/io.h>
 #include<util/delay.h>
 void init_adc()
