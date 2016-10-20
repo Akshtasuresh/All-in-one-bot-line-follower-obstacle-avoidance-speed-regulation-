@@ -1,0 +1,162 @@
+#include<avr/io.h>
+#include<util/delay.h>
+void init_adc()
+	{
+	ADCSRA=ADCSRA|(0b00000001<<ADEN);
+	ADCSRA=ADCSRA|(0b00000001<<ADPS2);
+	ADMUX=ADMUX|(0b00000001<<REFS0);
+
+}
+
+unsigned int read_adc()
+{
+	int p=0b00000000;
+	ADMUX=ADMUX|p;
+	ADCSRA=ADCSRA|(0b00000001<<ADSC);
+	while((ADCSRA&(0b00000001<<ADIF))==0);
+	
+	ADCSRA=ADCSRA|(0b00000001<<ADIF);
+	return(ADC);
+}
+
+void main()
+{
+
+init_adc();
+
+
+unsigned int a;
+unsigned int p;
+
+unsigned int T;
+unsigned int TON;
+unsigned int TOFF;
+DDRD=0b00000000; //setting part D as an i/p part
+DDRB=0b11111111; // setting part B as o/p part
+PORTD=0b11111111; //pulling up pins of part D
+int c;
+	while(1)
+	{
+		c=PIND;
+		if(c==0b11111100)		//both sensors are low
+			{
+			PORTB=0b00001010;	//goes straight
+			_delay_ms(10);
+			}
+			
+		if(c==0b11111101)		//right sensor is high
+			{
+			PORTB=0b00001001;	//turns right
+			_delay_ms(10);
+			}
+		
+		if(c==0b11111110)		//left sensor is high
+			{
+			PORTB=0b00000110;	//turns left
+			_delay_ms(10);
+			}
+			
+		if(c==0b11111111)
+			{
+			PORTB=0b00010000;	//beep and pause
+			_delay_ms(50);
+			PORTB=0b00001010;
+			_delay_ms(50);
+			}
+			
+		if(c==0b11110000)		//1
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+		if(c==0b11110001)		//2
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+		if(c==0b11110010)		//3
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+		if(c==0b11110011)		//4
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+		if(c==0b11111000)		//5
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+		if(c==0b11111001)		//6
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+		if(c==0b11111010)		//7
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+		if(c==0b11111011)		//8
+		{
+			PORTB=0b00010000;
+			_delay_ms(100);
+		}
+			
+		if(c==0b11110100)
+		{
+		p=read_adc();
+		a=(p/60);
+		T=17.1;
+		TON=a;
+		TOFF=T-TON;
+		PORTB=0b00001010;
+		_delay_ms(TON);
+		PORTB=0b00000000;
+		_delay_ms(TOFF);
+		}
+	
+		if(c==0b11110101)
+		{
+		p=read_adc();
+		a=(p/60);
+		T=17.1;
+		TON=a;
+		TOFF=T-TON;
+		PORTB=0b00001001;
+		_delay_ms(TON);
+		PORTB=0b00000000;
+		_delay_ms(TOFF);
+		}
+		
+		if(c==0b11110110)
+		{
+		p=read_adc();
+		a=(p/60);
+		T=17.1;
+		TON=a;
+		TOFF=T-TON;
+		PORTB=0b00000110;
+		_delay_ms(TON);
+		PORTB=0b00000000;
+		_delay_ms(TOFF);
+		}
+		if(c==0b11110111)
+		{
+		p=read_adc();
+		a=(p/60);
+		T=17.1;
+		TON=a;
+		TOFF=T-TON;
+		PORTB=0b00011010;
+		_delay_ms(TON);
+		PORTB=0b00010000;
+		_delay_ms(TOFF);
+		}
+		
+		
+		
+	}
+}
